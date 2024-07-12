@@ -1,5 +1,6 @@
 //lookup table method sourced from:
 //https://www.eevblog.com/forum/projects/rotary-encoder-jocks-a-question-about-the-lookup-table/
+//full oop doesnt work as when init for each class is run the interrupt isp expects a static method to be called,si only partial oop to initialize each encoder.
 #include "Keyboard.h"
 
 struct EncoderInfo {
@@ -10,7 +11,7 @@ struct EncoderInfo {
 //setup for left encoder
 int L_EncA = 0; //GPIO #5-CLK on encoder (Output A)
 int L_EncB = 1; //GPIO #4-DT on encoder (Output B)
-int8_t L_oldAB = 3;
+int8_t L_oldAB = 3; //0000 0011 default starting value for encoders
 int8_t L_encVal = 0;
 char L_left = '3';
 char L_right = '4';
@@ -18,7 +19,7 @@ char L_right = '4';
 //setup for right encoder
 int R_EncA = 2; //GPIO #5-CLK on encoder (Output A)
 int R_EncB = 3; //GPIO #4-DT on encoder (Output B)
-int8_t R_oldAB = 3;
+int8_t R_oldAB = 3; //0000 0011 default starting value for encoders
 int8_t R_encVal = 0;
 char R_left = '0';
 char R_right = '-';
