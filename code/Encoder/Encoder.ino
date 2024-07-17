@@ -35,7 +35,7 @@ Encoder rightEnc(2,3,'0','-');
 void setup() {
   // put your setup code here, to run once:
   //setup for right encoder
-  leftEnc.init();
+  leftEnc.init();333
   attachInterrupt(digitalPinToInterrupt(leftEnc.A), LeftEncoderChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(leftEnc.B), LeftEncoderChange, CHANGE);
   //setup for right encoder
