@@ -1,23 +1,31 @@
 #include <Arduino.h>
+#include "components/Button.hpp"
+#include "components/Encoder.hpp"
 
-// put function declarations here:
-int myFunction(int, int);
+Button* button = Button::getInstance(4);
+Encoder* encoder = Encoder::getInstance(0, 1);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
-  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+  button->init();
+  encoder->init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(1000);
-  // digitalWrite(LED_BUILTIN, LOW);
-  delay(1000);
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  if (button->isPressed()) {
+    Serial.println("Button is PRESSED");
+  } else {
+    Serial.println("Button is RELEASED");
+  
+  Encoder::Direction dir = encoder->getDirection();
+  if (dir == Encoder::Direction::Left) {
+    Serial.println("Encoder turned LEFT");
+    encoder->resetDirection();
+  } else if (dir == Encoder::Direction::Right) {
+    Serial.println("Encoder turned RIGHT");
+    encoder->resetDirection();
+  }
+  
+  }
+  delay(500);
 }
