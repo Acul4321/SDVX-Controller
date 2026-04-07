@@ -1,13 +1,15 @@
 #include "Encoder.hpp"
+#include <Keyboard.h>
 
 Encoder* Encoder::m_instance = nullptr;
 
-Encoder::Encoder(uint8_t pinA, uint8_t pinB) : m_pinA(pinA), m_pinB(pinB) {}
+Encoder::Encoder(uint8_t pinA, uint8_t pinB, uint8_t leftKey, uint8_t rightKey)
+    : m_pinA(pinA), m_pinB(pinB), m_leftKey(leftKey), m_rightKey(rightKey) {}
 
 // get singleton instance of the encoder
-Encoder* Encoder::getInstance(uint8_t pinA, uint8_t pinB) {
+Encoder* Encoder::getInstance(uint8_t pinA, uint8_t pinB, uint8_t leftKey, uint8_t rightKey) {
     if (m_instance == nullptr) {
-        m_instance = new Encoder(pinA, pinB);
+        m_instance = new Encoder(pinA, pinB, leftKey, rightKey);
     }
     return m_instance;
 }
@@ -46,12 +48,12 @@ void Encoder::handleEncoderChange() {
     // direction based on accumulated value
     if (m_encVal < -3) {  // counter-clockwise
         m_direction = Direction::Left;
-        Serial.println("Left");
+        m_leftPending = true;
         m_encVal = 0;
     }
     else if (m_encVal > 3) {  // clockwise
         m_direction = Direction::Right;
-        Serial.println("Right");
+        m_rightPending = true;
         m_encVal = 0;
     }
     else { // stoped
@@ -66,4 +68,29 @@ Encoder::Direction Encoder::getDirection() {
 // reset direction to Idle
 void Encoder::resetDirection() {
     m_direction = Direction::Idle;
+}
+
+void Encoder::updateKeyBinding() {
+    bool sendLeft = false;
+    bool sendRight = false;
+
+    noInterrupts();
+    if (m_leftPending) {
+        sendLeft = true;
+        m_leftPending = false;
+    }
+    if (m_rightPending) {
+        sendRight = true;
+        m_rightPending = false;
+    }
+    interrupts();
+
+    if (sendLeft) {
+        Keyboard.press(m_leftKey);
+        Keyboard.release(m_leftKey);
+    }
+    if (sendRight) {
+        Keyboard.press(m_rightKey);
+        Keyboard.release(m_rightKey);
+    }
 }

@@ -5,7 +5,7 @@
 #include "components/Encoder.hpp"
 
 Button* button = Button::getInstance(4, 'z');
-Encoder* encoder = Encoder::getInstance(0, 1);
+Encoder* encoder = Encoder::getInstance(0, 1, '3', '4');
 
 void setup() {
   Serial.begin(9600);
@@ -16,6 +16,7 @@ void setup() {
 
 void loop() {
   button->updateKeyBinding();
+  encoder->updateKeyBinding();
 
   if (button->isPressed()) {
     Serial.println("Button is PRESSED");
